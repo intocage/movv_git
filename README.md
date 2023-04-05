@@ -13,16 +13,7 @@ movv_git
   - info컬럼은 선택이므로 각 항목을 선택하지 않으면 아래와 같이 처리하여 null을 넣도록 하였습니다.
 
 ````
-	String info = null;
-	if (data.get("info") != null) {
-	    Map<String, Object> infoMap = (Map<String, Object>) data.get("info");
-	    int adult = Integer.parseInt(infoMap.getOrDefault("adult", "0").toString());
-	    int child = Integer.parseInt(infoMap.getOrDefault("child", "0").toString());
-	    JSONObject infoJson = new JSONObject();
-	    infoJson.put("adult", adult);
-	    infoJson.put("child", child);
-	    info = infoJson.toJSONString();
-	}
+	String info = data.get("info") == null ? null : data.get("info").toString();
 
 
 ````
