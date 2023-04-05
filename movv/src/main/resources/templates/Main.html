@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+<form id="regForm" action="" onsubmit="submitForm(event)">
+<table border=1>
+	<thead>
+		<tr>
+			<td>title</td>
+			<td><input type="text" name="title" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>kor_name</td>
+			<td><input type="text" name="kor_name" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>eng_name(선택)</td>
+			<td><input type="text" name="eng_name" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>tel</td>
+			<td><input type="text" name="tel" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>status(선택)</td>
+			<td><input readonly type="text" name="status" oninput="checkRequiredFields()" value="RESERV"></td>
+		</tr>
+		<tr>
+			<td>stdt</td>
+			<td><input  type="datetime-local" name="stdt" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>eddt</td>
+			<td><input type="datetime-local" name="eddt" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>price(선택)</td>
+			<td><input type="number" name="price" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>info(선택)</td>
+			<td>
+				<select name="info_adult" id="info_adult" onchange="updateInfoJson()">
+					<option value="" selected disabled>성인</option>
+				    <option value="0">0</option>
+				    <option value="1">1</option>
+				    <option value="2">2</option>
+				    <option value="3">3</option>
+				    <option value="4">4</option>
+				    <option value="5">5</option>
+				</select>
+				
+				<select name="info_child" id="info_child" onchange="updateInfoJson()">
+					<option value="" selected disabled>아이</option>
+				    <option value="0">0</option>
+				    <option value="1">1</option>
+				    <option value="2">2</option>
+				    <option value="3">3</option>
+				    <option value="4">4</option>
+				    <option value="5">5</option>
+				</select>
+				
+				<input type="hidden" name="info" id="info">
+			</td>
+		</tr>
+		<tr>
+			<td>reg_dt</td>
+			<td><input type="datetime-local" name="reg_dt" oninput="checkRequiredFields()"></td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td colspan="2"><p>최소 하나의 아이템을 작성해주세요</p></td></tr>
+		<tr><td colspan="2"><p>item 1</p></td></tr>
+		<tr>
+			<td>status</td>
+			<td><input readonly type="text" name="status1" oninput="checkRequiredFields()" value="RESERV"></td>
+		</tr>
+		<tr>
+			<td>price</td>
+			<td><input type="number" name="price1" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>title</td>
+			<td><input type="text" name="title1" oninput="checkRequiredFields()"></td>
+		</tr>
+		<tr>
+			<td>reg_dt</td>
+			<td><input type="datetime-local" name="reg_dt1" oninput="checkRequiredFields()"></td>
+		</tr>
+	</tbody>
+		<tr>
+		</tr>
+</table>
+<button type="button" onclick="addItem()">아이템 추가</button>
+<button type="submit" id="submitButton">등록하기</button>
+<button type="button" onclick="resetPage()">초기화</button>
+</form>
+<h1>예약 목록</h1>
+<h3>버튼을 눌러 console을 확인하세요</h3>
+<button id="rnoReserv" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="checkReserved('RESERV')">rno : RESERV</button>
+<button id="rnoCanceled" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="checkReserved('CANCEL')">rno : CANCEL</button>
+<br>
+<button id="inoReserv" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="checkReserved_item('RESERV')">ino : RESERV</button>
+<button id="inoCanceled" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="checkReserved_item('CANCEL')">ino : CANCEL</button>
+<br>
+<button id="totalReserv" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="checkttlReserved('RESERV')">total : RESERV</button>
+<button id="totalCnceled" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="checkttlReserved('CANCEL')">total : CANCEL</button>
+<h1>예약 취소</h1>
+<h3>버튼을 눌러 console을 확인하세요</h3>
+<input type="number" name="Reserv_rno" id="Reserv_rno" placeholder="취소할 rno를 입력하세요" oninput="checkInputs()">
+<button id="cancelReserv" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="cancelReserv()" disabled>Reserv 전체 취소</button><br>
+<input type="number" name="Reserv_item_rno" id="Reserv_item_rno" placeholder="취소할 rno를 입력하세요" oninput="checkInputs()">
+<input type="number" name="Reserv_item_ino" id="Reserv_item_ino" placeholder="취소할 ino를 입력하세요" oninput="checkInputs()">
+<button id="cancelReserv_item" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="cancelReserv_item()" disabled>Reserv_item 개별 취소</button>
+<br>
+<h1>예약 삭제</h1>
+<h3>버튼을 눌러 console을 확인하세요</h3>
+<input type="number" name="ReservDel_rno" id="ReservDel_rno" placeholder="취소할 rno를 입력하세요" oninput="checkInputs()">
+<button id="deleteReserv" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="deleteReserv()" disabled>Reserv 전체 삭제</button><br>
+<input type="number" name="ReservDel_item_rno" id="ReservDel_item_rno" placeholder="취소할 rno를 입력하세요" oninput="checkInputs()">
+<input type="number" name="ReservDel_item_ino" id="Reserv_itemDel_ino" placeholder="취소할 ino를 입력하세요" oninput="checkInputs()">
+<button id="deleteReserv_item" type="button" style="font-size: 20px; padding: 10px 20px;" onclick="deleteReserv_item()" disabled>Reserv_item 개별 삭제</button>
+
+<script type="text/javascript">
+	console.log("echo");
+	let infoJson;
+	function updateInfoJson() {
+	    let info_adult = document.getElementById("info_adult").value;
+	    let info_child = document.getElementById("info_child").value;
+
+	    info = {
+	        "adult": parseInt(info_adult),
+	        "child": parseInt(info_child)
+	    };
+	    infoJson=JSON.stringify(info);
+	    console.log(infoJson);
+	}
+	let itemCounter=1;
+	function addItem() {
+	    itemCounter += 1;
+	    const tbody = document.querySelector('tbody');
+	    const newRow = `
+	        <tr><td colspan="2"></del><p>item ${itemCounter}</p></td></tr>
+	        <tr>
+	            <td>status</td>
+	            <td><input readonly type="text" name="status${itemCounter}" oninput="checkRequiredFields()" value="RESERV"></td>
+	        </tr>
+	        <tr>
+	            <td>price</td>
+	            <td><input type="text" name="price${itemCounter}" oninput="checkRequiredFields()"></td>
+	        </tr>
+	        <tr>
+	            <td>title</td>
+	            <td><input type="text" name="title${itemCounter}" oninput="checkRequiredFields()"></td>
+	        </tr>
+	        <tr>
+	            <td>reg_dt</td>
+	            <td><input type="datetime-local" name="reg_dt${itemCounter}" oninput="checkRequiredFields()"></td>
+	        </tr>
+	    `;
+	    tbody.insertAdjacentHTML('beforeend', newRow);
+	}
+    
+    function resetPage() {
+    	location.href = '/Main';
+    };
+    
+    async function checkRequiredFields() {
+        const titleInput = document.querySelector("input[name='title']");
+        const korNameInput = document.querySelector("input[name='kor_name']");
+        const telInput = document.querySelector("input[name='tel']");
+        const stdtInput = document.querySelector("input[name='stdt']");
+        const eddtInput = document.querySelector("input[name='eddt']");
+        const regDtInput = document.querySelector("input[name='reg_dt']");
+
+        const statusInputs = document.querySelectorAll("input[name^='status']");
+        const priceInputs = document.querySelectorAll("input[name^='price']");
+        const itemTitleInputs = document.querySelectorAll("input[name^='title']");
+        const itemRegDtInputs = document.querySelectorAll("input[name^='reg_dt']");
+
+        const submitButton = document.getElementById("submitButton");
+
+        let allFieldsFilled = true;
+
+        // 기본 입력 필드 검사
+        if (
+            !titleInput.value ||
+            !korNameInput.value ||
+            !telInput.value ||
+            !stdtInput.value ||
+            !eddtInput.value ||
+            !regDtInput.value
+        ) {
+            allFieldsFilled = false;
+        }
+
+        // 동적 입력 필드 검사
+        [statusInputs, priceInputs, itemTitleInputs, itemRegDtInputs].forEach((inputs) => {
+            inputs.forEach((input) => {
+                if (!input.value) {
+                    allFieldsFilled = false;
+                }
+            });
+        });
+
+        // 버튼 상태 설정
+        submitButton.disabled = !allFieldsFilled;
+    }
+
+    // 페이지 로드 시 초기 상태 체크
+    checkRequiredFields();
+    
+    async function checkReserved(status) {
+        fetch('/checkReserved', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                status: status,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(status,'Data:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        
+    };
+
+    async function checkReserved_item(status) {
+        fetch('/checkReserved_item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                status: status,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(status,'Data:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        
+    };
+    async function checkttlReserved(status) {
+        fetch('/checkttlReserved', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                status: status,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(status,'Data:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        
+    };
+    
+    async function submitForm(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        
+        const form = document.getElementById('regForm');
+        const formData = new FormData(form);
+
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        data.info=infoJson;
+        console.log(data);
+		await fetch('/insertReserve', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+		.then(response => {
+		    if (!response.ok) {
+		        throw new Error('Network response was not ok');
+		      }
+		      return response.json();
+	    })
+	    .then(res => {
+	    	data.rno=res.latestReserv.rno;
+	    	console.log(data);
+	    	return data;
+	    })
+	    await fetch('/insertReserve_item', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+		.then(response => {
+		    if (!response.ok) {
+		        throw new Error('Network response was not ok');
+		      }
+		      return response.json();
+	    })
+	    .then(res => {
+	    	console.log(res.latestReserv_item);
+	    	alert("등록성공");
+	    	location.href = '/Main';
+	    })
+	    .catch(error => {
+	      console.error('There was a problem with the fetch operation:', error);
+	    });
+    }
+    async function checkInputs() {
+    	  const reservRno = document.getElementById('Reserv_rno');
+    	  const reservItemRno = document.getElementById('Reserv_item_rno');
+    	  const reservItemIno = document.getElementById('Reserv_item_ino');
+    	  const cancelReservButton = document.getElementById('cancelReserv');
+    	  const cancelReservItemButton = document.getElementById('cancelReserv_item');
+          const reservDelRno = document.getElementById('ReservDel_rno');
+          const reservDelItemRno = document.getElementById('ReservDel_item_rno');
+          const reservItemDelIno = document.getElementById('Reserv_itemDel_ino');
+          const deleteReservButton = document.getElementById('deleteReserv');
+          const deleteReservItemButton = document.getElementById('deleteReserv_item');
+
+
+    	  // Enable the 'cancelReserv' button if the 'Reserv_rno' field has a value
+    	  if (reservRno.value.trim() !== '') {
+    	    cancelReservButton.disabled = false;
+    	  } else {
+    	    cancelReservButton.disabled = true;
+    	  }
+    	  if (reservItemRno.value.trim() !== '' && reservItemIno.value.trim() !== '') {
+    	    cancelReservItemButton.disabled = false;
+    	  } else {
+    	    cancelReservItemButton.disabled = true;
+    	  }
+          if (reservDelRno.value.trim() !== '') {
+              deleteReservButton.disabled = false;
+          } else {
+              deleteReservButton.disabled = true;
+          }
+          if (reservDelItemRno.value.trim() !== '' && reservItemDelIno.value.trim() !== '') {
+              deleteReservItemButton.disabled = false;
+          } else {
+              deleteReservItemButton.disabled = true;
+          }
+    	  
+   	}
+    async function cancelReserv() {
+		const rno = document.querySelector('input[name="Reserv_rno"]').value;
+		const response = await fetch('cancelReservation', {
+		  method: 'PUT',
+		  headers: {
+		    'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify({ rno }),
+		});
+		if(response.ok){
+			console.log("success")
+			alert("성공");
+			location.href = '/Main';
+		}else{
+			console.log("fail")
+		}
+		}
+
+   	async function cancelReserv_item() {
+		const ino = document.querySelector('input[name="Reserv_item_ino"]').value;
+		const rno = document.querySelector('input[name="Reserv_item_rno"]').value;
+		const response = await fetch('cancelReservation_item', {
+		  method: 'PUT',
+		  headers: {
+		    'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify({ "ino":ino, "rno":rno}),
+		});
+		if(response.ok){
+			console.log("success")
+			alert("성공");
+			location.href = '/Main';
+		}else{
+			console.log("fail")
+		}
+		}
+    async function deleteReserv() {
+		const rno = document.querySelector('input[name="ReservDel_rno"]').value;
+		const response = await fetch('deleteReservation', {
+		  method: 'DELETE',
+		  headers: {
+		    'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify({ rno }),
+		});
+		if(response.ok){
+			console.log("success")
+			alert("성공");
+			location.href = '/Main';
+		}else{
+			console.log("fail")
+		}
+		}
+
+   	async function deleteReserv_item() {
+		const ino = document.querySelector('input[name="ReservDel_item_ino"]').value;
+		const rno = document.querySelector('input[name="ReservDel_item_rno"]').value;
+		const response = await fetch('deleteReservation_item', {
+		  method: 'DELETE',
+		  headers: {
+		    'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify({ "ino":ino, "rno":rno}),
+		});
+		if(response.ok){
+			console.log("success")
+			alert("성공");
+			location.href = '/Main';
+		}else{
+			console.log("fail")
+		}
+		}
+    
+
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        const list = /*[[${list}]]*/ [];
+        console.log(list);
+    /*]]>*/
+</script>
+</body>
+</html>
