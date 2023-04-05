@@ -115,7 +115,7 @@ public class ReservationRestController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 		String title=data.get("title").toString();
 		String kor_name=data.get("kor_name").toString();
-		String eng_name=data.get("eng_name").toString();
+	    String eng_name = data.get("eng_name") != "" ? data.get("eng_name").toString() : null;
 		String tel=data.get("tel").toString();
 		String status=data.get("status").toString();
 		String stringstdt = data.get("stdt").toString().replace("T", " ");
@@ -123,13 +123,16 @@ public class ReservationRestController {
 		String stringeddt=data.get("eddt").toString().replace("T", " ");
 		Date eddt=dateFormat.parse(stringeddt);
 		int price = Integer.parseInt(data.get("price").toString());
-		Map<String, Object> infoMap = (Map<String, Object>) data.getOrDefault("info", new HashMap<>());
-	    int adult = Integer.parseInt(infoMap.getOrDefault("adult", "0").toString());
-	    int child = Integer.parseInt(infoMap.getOrDefault("child", "0").toString());
-	    JSONObject infoJson = new JSONObject();
-	    infoJson.put("adult", adult);
-	    infoJson.put("child", child);
-	    String info = infoJson.toJSONString();
+		String info = null;
+		if (data.get("info") != null) {
+		    Map<String, Object> infoMap = (Map<String, Object>) data.get("info");
+		    int adult = Integer.parseInt(infoMap.getOrDefault("adult", "0").toString());
+		    int child = Integer.parseInt(infoMap.getOrDefault("child", "0").toString());
+		    JSONObject infoJson = new JSONObject();
+		    infoJson.put("adult", adult);
+		    infoJson.put("child", child);
+		    info = infoJson.toJSONString();
+		}
 		String stringreg_dt=data.get("reg_dt").toString().replace("T", " ");
 		Date reg_dt=dateFormat.parse(stringreg_dt);
 		
