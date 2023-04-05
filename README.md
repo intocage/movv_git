@@ -10,17 +10,11 @@ movv_git
   - 예약당 아이템은 반드시 1개 이상 포함해야하므로, 하나의 아이템은 처음에 추가했으며, 아이템 추가하기 버튼으로 등록할 아이템
     추가 가능
   - 모든 데이터가 입력되지 않으면 등록하기 버튼을 누를수 없도록하여 데이터 유효성 확보
-  - info컬럼은 선택이므로 각 항목을 선택하지 않으면 아래와 같이 처리하여 기본값 0을 넣도록 하였습니다.
+  - info컬럼은 선택이므로 각 항목을 선택하지 않으면 아래와 같이 처리하여 null을 넣도록 하였습니다.
 
 ````
+	String info = data.get("info") == null ? null : data.get("info").toString();
 
-            Map<String, Object> infoMap = (Map<String, Object>) data.getOrDefault("info", new HashMap<>());
-	    int adult = Integer.parseInt(infoMap.getOrDefault("adult", "0").toString());
-	    int child = Integer.parseInt(infoMap.getOrDefault("child", "0").toString());
-	    JSONObject infoJson = new JSONObject();
-	    infoJson.put("adult", adult);
-	    infoJson.put("child", child);
-	    String info = infoJson.toJSONString();
 
 ````
 
