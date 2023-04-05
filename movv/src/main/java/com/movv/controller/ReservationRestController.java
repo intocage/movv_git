@@ -123,16 +123,7 @@ public class ReservationRestController {
 		String stringeddt=data.get("eddt").toString().replace("T", " ");
 		Date eddt=dateFormat.parse(stringeddt);
 		int price = Integer.parseInt(data.get("price").toString());
-		String info = null;
-		if (data.get("info") != null) {
-		    Map<String, Object> infoMap = (Map<String, Object>) data.get("info");
-		    int adult = Integer.parseInt(infoMap.getOrDefault("adult", "0").toString());
-		    int child = Integer.parseInt(infoMap.getOrDefault("child", "0").toString());
-		    JSONObject infoJson = new JSONObject();
-		    infoJson.put("adult", adult);
-		    infoJson.put("child", child);
-		    info = infoJson.toJSONString();
-		}
+		String info = data.get("info") == null ? null : data.get("info").toString();
 		String stringreg_dt=data.get("reg_dt").toString().replace("T", " ");
 		Date reg_dt=dateFormat.parse(stringreg_dt);
 		
