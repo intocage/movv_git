@@ -17,6 +17,17 @@ movv_git
 
 
 ````
+  - reservation의 price는 선택사항이므로 유효성에서 제외하였으며 공백 데이터를 전송할경우 reservation_item들의 price 합계를 넣도록 했습니다.
+````
+	int count = 1;
+	int price_sum=0;
+	while (data.containsKey("title" + count)) {
+		price_sum += Integer.parseInt(data.get("price" + count).toString());
+		count++;
+	}
+	int price = data.get("price")!="" ? Integer.parseInt(data.get("price").toString()) : price_sum;
+
+````
 
   - reservation의 등록이 완료되면 rno가 가장 큰 reservation행을 찾아 반환하여 front의 data에 rno항목을 추가해줍니다.
   - rno가 추가된 data로 reservation_item들을 등록하는데, 이때 front의 name속성에 숫자를 붙여 아래와 같이 활용했습니다.
