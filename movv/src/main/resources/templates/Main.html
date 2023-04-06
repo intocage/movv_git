@@ -139,9 +139,20 @@
 	    infoJson=JSON.stringify(info);
 	    console.log(infoJson);
 	}
+	function getTotalPrice() {
+		  let totalPrice = 0;
+		  for (let i = 1; i <= itemCounter; i++) {
+		    const priceInput = document.querySelector(`input[name='price${i}']`);
+		    if (priceInput && priceInput.value) {
+		      totalPrice += parseFloat(priceInput.value);
+		    }
+		  }
+		  return totalPrice;
+		}
 	let itemCounter=1;
 	function addItem() {
 	    itemCounter += 1;
+	    const totalPrice = getTotalPrice();
 	    const tbody = document.querySelector('tbody');
 	    const newRow = `
 	        <tr><td colspan="2"></del><p>item ${itemCounter}</p></td></tr>
@@ -178,7 +189,7 @@
         const regDtInput = document.querySelector("input[name='reg_dt']");
 
         const statusInputs = document.querySelectorAll("input[name^='status']");
-        const priceInputs = document.querySelectorAll("input[name^='price']");
+        const priceInputs = document.querySelectorAll("input[name^='price']:not([name='price'])");
         const itemTitleInputs = document.querySelectorAll("input[name^='title']");
         const itemRegDtInputs = document.querySelectorAll("input[name^='reg_dt']");
 

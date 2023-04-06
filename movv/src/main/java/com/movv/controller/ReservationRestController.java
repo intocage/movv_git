@@ -113,6 +113,13 @@ public class ReservationRestController {
 	@PutMapping("/insertReserve")
 	public ResponseEntity<Map<String, Object>> insertReserve(@RequestBody Map<String, Object> data) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+	    int count = 1;
+	    int price_sum=0;
+	    while (data.containsKey("title" + count)) {
+	        price_sum += Integer.parseInt(data.get("price" + count).toString());
+	        count++;
+	    }
+	        
 		String title=data.get("title").toString();
 		String kor_name=data.get("kor_name").toString();
 	    String eng_name = data.get("eng_name") != "" ? data.get("eng_name").toString() : null;
@@ -122,7 +129,7 @@ public class ReservationRestController {
 		Date stdt = dateFormat.parse(stringstdt);
 		String stringeddt=data.get("eddt").toString().replace("T", " ");
 		Date eddt=dateFormat.parse(stringeddt);
-		int price = Integer.parseInt(data.get("price").toString());
+		int price = data.get("price")!="" ? Integer.parseInt(data.get("price").toString()) : price_sum;
 		String info = data.get("info") == null ? null : data.get("info").toString();
 		String stringreg_dt=data.get("reg_dt").toString().replace("T", " ");
 		Date reg_dt=dateFormat.parse(stringreg_dt);
@@ -147,6 +154,7 @@ public class ReservationRestController {
 		System.out.println(latestData.get("latestReserv"));
 		return ResponseEntity.ok(latestData);
 	}
+	    
 	
 	// 예약 취소
 	@PutMapping("cancelReservation")
